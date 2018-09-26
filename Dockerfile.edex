@@ -1,0 +1,26 @@
+FROM centos:7
+ENV VERSION 18.1.1
+ENV RELEASE 1
+MAINTAINER Michael James <mjames@ucar.edu>
+USER root
+
+RUN yum update yum -y
+RUN groupadd fxalpha && useradd -G fxalpha awips
+RUN yum install epel-release wget initscripts which -y
+RUN yum clean all -y
+
+RUN wget -O /etc/yum.repos.d/awips2.repo https://www.unidata.ucar.edu/software/awips2/doc/el7-dev.repo
+RUN wget https://www.unidata.ucar.edu/software/awips2/awips_install.sh
+RUN chmod +x awips_install.sh
+RUN ./awips_install.sh --ingest
+RUN rm -rf awips_install.sh
+
+ENV LD_LIBRARY_PATH /usr/lib64
+RUN echo 'export LD_LIBRARY_PATH=/usr/lib64' >> /root/.bashrc 
+RUN echo "NETWORKING=yes" > /etc/sysconfig/network
+
+#ENTRYPOINT ["/bin/bash"]
+
+COPY entrypoint.sh /
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]

@@ -1,0 +1,15 @@
+version: '3'
+services:
+  edex:
+    image: unidata/edex-ingest:latest
+    container_name: edex
+    volumes:
+      # change defaults to your liking
+      - ./etc/:/awips2/ldm/etc/
+      - ./bin/:/awips2/edex/bin/
+    ports:
+      - "388:388"
+    ulimits:
+      nofile:
+        soft: 1024
+        hard: 1024
