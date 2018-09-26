@@ -1,5 +1,5 @@
 #!/bin/bash -v
-rebuild=true
+rebuild=false
 
 # current directory
 dir="$( cd "$(dirname "$0")" ; pwd -P )"
@@ -19,7 +19,6 @@ if $rebuild; then
 fi
 
 # build image
-pushd /awips2/repo/awips2-builds/build/edex-ingest
 sudo docker build ${rmflag} -t unidata/edex-ingest -f Dockerfile.edex .
 
 # push to dockerhub

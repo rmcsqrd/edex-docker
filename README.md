@@ -6,8 +6,8 @@ This repository contains files necessary to build and run a Docker container for
 
 ## Versions
 
-- `unidata/edex-docker:latest`
-- `unidata/edex-docker:18.1.1`
+- `unidata/edex-ingest:latest`
+- `unidata/edex-ingest:18.1.1`
 
 ## Configuration
 

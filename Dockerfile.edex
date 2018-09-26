@@ -19,8 +19,11 @@ ENV LD_LIBRARY_PATH /usr/lib64
 RUN echo 'export LD_LIBRARY_PATH=/usr/lib64' >> /root/.bashrc 
 RUN echo "NETWORKING=yes" > /etc/sysconfig/network
 
-#ENTRYPOINT ["/bin/bash"]
+COPY runedex.sh /awips2/edex/bin/
+RUN chmod +x /awips2/edex/bin/runedex.sh
 
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
+
+CMD ["/awips2/edex/bin/runedex.sh"]
