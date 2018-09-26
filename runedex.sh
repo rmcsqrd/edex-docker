@@ -6,6 +6,7 @@ ulimit -n 1024
 set -e
 set -x
 . /etc/profile.d/awips2.sh
+su - awips -c 'regutil -s '$HOSTNAME' /hostname'
 edex setup
 edex start
 

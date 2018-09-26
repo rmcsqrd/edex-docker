@@ -7,6 +7,6 @@ if [ "$1" = 'runedex.sh' ]; then
             chown awips:fxalpha "$i"
         fi
     done
-    exec gosu edex "$@"
+    exec gosu awips "$@"
 fi
 exec "$@"

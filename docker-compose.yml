@@ -1,10 +1,9 @@
 version: '3'
 services:
-  edex:
+  edex-docker:
     image: unidata/edex-ingest:latest
-    container_name: edex
+    container_name: edex-docker
     volumes:
-      # change defaults to your liking
       - ./etc/:/awips2/ldm/etc/
       - ./bin/:/awips2/edex/bin/
     ports:
