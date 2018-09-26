@@ -40,11 +40,11 @@ The LDM operates on a push data model. You will have to find an institution who 
 
 Once you have completed your `docker-compose.yml` setup, you can run the container with:
 
-    docker-compose up -d edex-docker
+    docker-compose up -d edex-ingest
 
 The output should be something like:
 
-    Creating edex-docker ... done
+    Creating edex-ingest ... done
 
 ### Stopping EDEX Ingest
 
@@ -62,7 +62,7 @@ To clean the slate and remove the container (not the image, the container):
 
 To verify that EDEX and the LDM are alive you can run `edex status` **inside** the container. To do that, run:
 
-    docker exec edex-docker edex status
+    docker exec edex-ingest edex status
 
 which should look like:
 
@@ -76,26 +76,26 @@ which should look like:
 
 ## Running Commands Inside the Container
 
-1. You can enter the container with `docker exec -it edex-docker bash`. For example,
+1. You can enter the container with `docker exec -it edex-ingest  bash`. For example,
 
  ```bash
- $ docker exec -it edex-docker bash
+ $ docker exec -it edex-ingest bash
  [root@291c06984ded ~]$ edex log
  ```
 
-2. Execute the command from outside the container with `docker exec edex-docker <command>`. For example,
+2. Execute the command from outside the container with `docker exec edex-ingest <command>`. For example,
 
  ```bash
- docker exec edex-docker edex log
+ docker exec edex-ingest edex log
  ```
 ## Updates
 
 To update the container
 
 ```bash
-docker pull unidata/edex-docker:latest
+docker pull unidata/edex-ingest:latest
 docker-compose stop
-docker-compose up -d edex-docker
+docker-compose up -d edex-ingest
 ```
 
 ## Support

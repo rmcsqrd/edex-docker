@@ -1,8 +1,8 @@
 version: '3'
 services:
-  edex-docker:
+  edex-ingest:
     image: unidata/edex-ingest:latest
-    container_name: edex-docker
+    container_name: edex-ingest
     volumes:
       - ./etc/:/awips2/ldm/etc/
       - ./bin/:/awips2/edex/bin/
