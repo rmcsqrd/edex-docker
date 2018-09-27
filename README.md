@@ -1,102 +1,120 @@
-# EDEX Ingest Docker
+# AWIPS EDEX Ingest Docker Container
 
-[![Travis Status](https://travis-ci.org/Unidata/edex-docker.svg?branch=master)](https://travis-ci.org/Unidata/edex-docker)
+This repository contains files necessary to build and run a [Unidata AWIPS EDEX Data Server](https://www.unidata.ucar.edu/software/awips2/) inside a Docker container.
 
-This repository contains files necessary to build and run a Docker container for an AWIPS EDEX Data Server.
+## Quick Start
 
-## Versions
+Download and install Docker and Docker Compose:
 
-- `unidata/edex-ingest:latest`
-- `unidata/edex-ingest:18.1.1`
+* [Docker for CentOS 7 Linux](https://docs.docker.com/install/linux/docker-ce/centos/)
+* [Docker for Mac](https://docs.docker.com/docker-for-mac/)
+* [Docker for Windows](https://docs.docker.com/docker-for-windows/install/)
+* [docker-compose](https://docs.docker.com/compose/) (it should be bundled with Docker by default on Mac and Windows)
 
-## Configuration
+Clone this repository
 
-### Run Configuration with `docker-compose`
+    git clone https://github.com/Unidata/edex-docker.git
+    cd edex-docker
 
-To run the EDEX Docker container, beyond a basic Docker setup, we recommend installing [docker-compose](https://docs.docker.com/compose/).
-
-You can customize the default `docker-compose.yml` to decide:
-
--   which EDEX Ingest image version you want to run
--   which port will map to port `388` for the LDM
-
-Two directory paths will be mounted outside the container with `docker-compose.yml`:
-
--   `etc/` to `/awips2/ldm/etc` to suppply the files `ldmd.conf` and `pqact.conf`
--   `bin/` to `/awips2/edex/bin` to supply the file `setup.env`
-
-### LDM Configuration Files
-
-In the `etc` directory, you will have to do the usual LDM configuration by editing:
-
--   `ldmd.conf`
--   `pqact.conf`
-
-### Upstream Data Feed from Unidata or Elsewhere
-
-The LDM operates on a push data model. You will have to find an institution who will agree to push you the data you are interested in. If you are part of the academic community please send a support email to `support-idd@unidata.ucar.edu` to discuss your LDM data requirements.
-
-### Running EDEX Ingest
-
-Once you have completed your `docker-compose.yml` setup, you can run the container with:
+Run the container with docker-compose
 
     docker-compose up -d edex-ingest
 
-The output should be something like:
+Confirm the container is running
 
-    Creating edex-ingest ... done
+    docker ps -a 
 
-### Stopping EDEX Ingest
+Enter the container
 
-To stop this container:
+    docker exec -it edex-ingest bash    
+
+Stop the container
 
     docker-compose stop
 
-### Delete EDEX Ingest Container
-
-To clean the slate and remove the container (not the image, the container):
+Delete the container (keep the image)
 
     docker-compose rm -f
+    
+Run commands inside the container, such as
 
-## Check What is Running
+    docker exec edex-ingest edex
 
-To verify that EDEX and the LDM are alive you can run `edex status` **inside** the container. To do that, run:
-
-    docker exec edex-ingest edex status
-
-which should look like:
+which should return something like
 
     [edex status]
      qpid        :: running :: pid 22474
      EDEXingest  :: running :: pid 21860 31513
-     EDEXgrib    :: running :: pid 21869 31630
+     EDEXgrib    :: not running
      ldmadmin    :: running :: pid 22483
 
      edex (status|start|stop|setup|log|purge|qpid|users)
 
-## Running Commands Inside the Container
-
-1. You can enter the container with `docker exec -it edex-ingest  bash`. For example,
-
- ```bash
- $ docker exec -it edex-ingest bash
- [root@291c06984ded ~]$ edex log
- ```
-
-2. Execute the command from outside the container with `docker exec edex-ingest <command>`. For example,
-
- ```bash
- docker exec edex-ingest edex log
- ```
-## Updates
-
-To update the container
+To update to the latest version and restart:
 
 ```bash
 docker pull unidata/edex-ingest:latest
 docker-compose stop
 docker-compose up -d edex-ingest
 ```
+
+## Configuration and Customization
+
+The file `docker-compose.yml` defines files to mount to the container and which ports to open:
+
+    edex-ingest:
+      image: unidata/edex-ingest:latest
+      container_name: edex-ingest
+      volumes:
+        - ./etc/ldmd.conf:/awips2/ldm/etc/ldmd.conf
+        - ./etc/pqact.conf:/awips2/ldm/etc/pqact.conf
+        - ./bin/setup.env:/awips2/edex/bin/setup.env
+        - ./modes.xml:/awips2/edex/conf/modes/modes.xml
+        - ./bin/runedex.sh:/awips2/edex/bin/runedex.sh
+      ports:
+        - "388:388"
+      ulimits:
+        nofile:
+          soft: 1024
+          hard: 1024
+
+## Mounted Files
+
+- `etc/ldmd.conf`
+
+    Defines which data feeds to receive. By default there is only one active request line (`REQUEST IDS|DDPLUS ".*" idd.unidata.ucar.edu`) to overwhelm small EDEX containers ingesting large volumes of radar and gridded data files.  Any updates to the file `etc/ldmd.conf` will be read the next time you start the edex-ingest container.
+ 
+- `etc/pqact.conf`
+
+    Defines how products are processed and where they are written to on the filesystem. This is the full set of pattern actions used in Unidata AWIPS, and generally you do not need to edit this time. Instead control which data feeds are reqeusted in `ldmd.conf` (above).
+
+- `bin/setup.env`
+
+    Defines the remote EDEX Database/Request server:
+    
+        ### EDEX localization related variables ###
+        export AW_SITE_IDENTIFIER=OAX
+        export EXT_ADDR=js-157-198.jetstream-cloud.org
+
+    The variable **EXT_ADDR** must be set to an allowed EDEX Database/Request Server. In this example we are using a JetStream Cloud instance, which controls our edex-ingest access with IPtables, SSL certificates, and PostgreSQL pg_hba.conf rules (this server address will probably not work for you). 
+
+- `modes.xml`
+
+    Defines mode names based on plugin groups and include/exclude rules.
+
+- `bin/runedex.sh`
+
+    The default script run when the container is started, acts as a sort-of service manager for EDEX and the LDM (see `ENTRYPOINT ["/awips2/edex/bin/runedex.sh"]` in *Dockerfile.edex*), essentially:
+
+        /awips2/qpid/bin/qpid-wrapper &
+        /awips2/edex/bin/start.sh -noConsole ingest &
+        ldmadmin mkqueue
+        ldmadmin start
+        
+
+## Upstream Data Feed for the LDM
+
+The LDM operates on a push data model. You will have to find an institution who will agree to push you the data you are interested in. If you are part of the academic community please send a support email to `support-idd@unidata.ucar.edu` to discuss your LDM data requirements.
 
 ## Support
 
