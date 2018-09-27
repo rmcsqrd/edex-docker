@@ -82,11 +82,11 @@ The file `docker-compose.yml` defines files to mount to the container and which 
 
 - `etc/ldmd.conf`
 
-    Defines which data feeds to receive. By default there is only one active request line (`REQUEST IDS|DDPLUS ".*" idd.unidata.ucar.edu`) to overwhelm small EDEX containers ingesting large volumes of radar and gridded data files.  Any updates to the file `etc/ldmd.conf` will be read the next time you start the edex-ingest container.
+    Defines which data feeds to receive. By default there is only one active request line (`REQUEST IDS|DDPLUS ".*" idd.unidata.ucar.edu`) to not overwhelm small EDEX containers ingesting large volumes of radar and gridded data files.  Any updates to the file `etc/ldmd.conf` will be read the next time you restart the container.
  
 - `etc/pqact.conf`
 
-    Defines how products are processed and where they are written to on the filesystem. This is the full set of pattern actions used in Unidata AWIPS, and generally you do not need to edit this time. Instead control which data feeds are reqeusted in `ldmd.conf` (above).
+    Defines how products are processed and where they are written to on the filesystem. This is the full set of pattern actions used in Unidata AWIPS, and generally you do not need to edit this file. Instead control which data feeds are requested in `ldmd.conf` (above).
 
 - `bin/setup.env`
 
@@ -96,11 +96,11 @@ The file `docker-compose.yml` defines files to mount to the container and which 
         export AW_SITE_IDENTIFIER=OAX
         export EXT_ADDR=js-157-198.jetstream-cloud.org
 
-    The variable **EXT_ADDR** must be set to an allowed EDEX Database/Request Server. In this example we are using a JetStream Cloud instance, which controls our edex-ingest access with IPtables, SSL certificates, and PostgreSQL pg_hba.conf rules (this server address will probably not work for you). 
+    **EXT_ADDR** must be set to an allowed EDEX Database/Request Server. In this example we are using a JetStream Cloud instance, which controls our edex-ingest access with IPtables, SSL certificates, and PostgreSQL pg_hba.conf rules (this server is used in software training workshop environments and will not allow outside connections). 
 
 - `modes.xml`
 
-    Defines mode names based on plugin groups and include/exclude rules.
+    Defines mode names based on plugin groups and include/exclude rules. Edit this file to mute unused plugins from your EDEX instance.  For example, if you are only ingesting satellite imagery, you can turn off all other data plugins to quicken initialization time and reduce Qpid shared memory usage.
 
 - `bin/runedex.sh`
 
