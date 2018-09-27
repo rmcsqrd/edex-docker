@@ -6,10 +6,12 @@ trap "echo TRAPed signal" HUP INT QUIT KILL TERM
 
 # EDEX
 edex setup
-/awips2/qpid/bin/qpid-wrapper 2>&1
-/awips2/edex/bin/start.sh -noConsole ingest 2>&1
-/awips2/edex/bin/start.sh -noConsole ingestGrib 2>&1
+/awips2/qpid/bin/qpid-wrapper &
+/awips2/edex/bin/start.sh -noConsole ingest &
+/awips2/edex/bin/start.sh -noConsole ingestGrib &
 
+. /etc/profile.d/awips2.sh
+export PATH=$PATH:/awips2/ldm/bin/
 # LDM
 regutil -s '$HOSTNAME' /hostname
 ldmadmin mkqueue
