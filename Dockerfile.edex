@@ -9,7 +9,7 @@ RUN groupadd fxalpha && useradd -G fxalpha awips
 RUN yum install epel-release wget initscripts which -y
 RUN yum clean all -y
 
-RUN wget -O /etc/yum.repos.d/awips2.repo https://www.unidata.ucar.edu/software/awips2/doc/el7-dev.repo
+RUN wget -O /etc/yum.repos.d/awips.repo https://www.unidata.ucar.edu/software/awips2/doc/el7-dev.repo
 RUN wget https://www.unidata.ucar.edu/software/awips2/awips_install.sh
 RUN chmod +x awips_install.sh
 RUN ./awips_install.sh --ingest
@@ -19,6 +19,6 @@ ENV LD_LIBRARY_PATH /usr/lib64
 RUN echo 'export LD_LIBRARY_PATH=/usr/lib64' >> /root/.bashrc 
 RUN yum install rsyslog -y
 
-COPY runedex.sh /awips2/edex/bin/
+COPY bin/runedex.sh /awips2/edex/bin/
 RUN chmod +x /awips2/edex/bin/runedex.sh
 ENTRYPOINT ["/awips2/edex/bin/runedex.sh"]

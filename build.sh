@@ -1,5 +1,5 @@
 #!/bin/bash -v
-rebuild=false
+rebuild=true
 
 # current directory
 dir="$( cd "$(dirname "$0")" ; pwd -P )"
