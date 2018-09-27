@@ -17,13 +17,15 @@ RUN rm -rf awips_install.sh
 
 ENV LD_LIBRARY_PATH /usr/lib64
 RUN echo 'export LD_LIBRARY_PATH=/usr/lib64' >> /root/.bashrc 
-RUN echo "NETWORKING=yes" > /etc/sysconfig/network
+#RUN echo "NETWORKING=yes" > /etc/sysconfig/network
 
 COPY runedex.sh /awips2/edex/bin/
 RUN chmod +x /awips2/edex/bin/runedex.sh
 
-COPY entrypoint.sh /
-RUN chmod +x /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
+RUN yum install rsyslog -y
 
-CMD ["/awips2/edex/bin/runedex.sh"]
+#COPY entrypoint.sh /
+#RUN chmod +x /entrypoint.sh
+#ENTRYPOINT ["/entrypoint.sh"]
+
+ENTRYPOINT ["/awips2/edex/bin/runedex.sh"]
