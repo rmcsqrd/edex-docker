@@ -13,7 +13,8 @@ edex setup
 . /etc/profile.d/awips2.sh
 export PATH=$PATH:/awips2/ldm/bin/
 # LDM
-regutil -s '$HOSTNAME' /hostname
+rand=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1`
+regutil -s 'unidata-awips-edex-ingest-'${rand}'.docker.com' /hostname
 ldmadmin mkqueue
 ldmadmin start
 

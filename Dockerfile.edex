@@ -18,4 +18,7 @@ RUN rm -rf awips_install.sh
 ENV LD_LIBRARY_PATH /usr/lib64
 RUN echo 'export LD_LIBRARY_PATH=/usr/lib64' >> /root/.bashrc 
 RUN yum install rsyslog -y
+
+COPY runedex.sh /awips2/edex/bin/
+RUN chmod +x /awips2/edex/bin/runedex.sh
 ENTRYPOINT ["/awips2/edex/bin/runedex.sh"]
