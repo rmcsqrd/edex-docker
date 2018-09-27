@@ -6,9 +6,9 @@ trap "echo TRAPed signal" HUP INT QUIT KILL TERM
 
 # EDEX
 edex setup
-/bin/bash /awips2/qpid/bin/qpid-wrapper
-/bin/bash /awips2/edex/bin/start.sh -noConsole ingest
-/bin/bash /awips2/edex/bin/start.sh -noConsole ingestGrib
+/awips2/qpid/bin/qpid-wrapper 2>&1
+/awips2/edex/bin/start.sh -noConsole ingest 2>&1
+/awips2/edex/bin/start.sh -noConsole ingestGrib 2>&1
 
 # LDM
 regutil -s '$HOSTNAME' /hostname

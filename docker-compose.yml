@@ -5,6 +5,7 @@ edex-ingest:
     - ./etc/ldmd.conf:/awips2/ldm/etc/ldmd.conf
     - ./etc/pqact.conf:/awips2/ldm/etc/pqact.conf
     - ./bin/setup.env:/awips2/edex/bin/setup.env
+    - ./bin/runedex.sh:/awips2/edex/bin/runedex.sh
   ports:
     - "388:388"
     - "5672:5672"
