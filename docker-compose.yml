@@ -6,12 +6,9 @@ edex-ingest:
     - ./etc/pqact.conf:/awips2/ldm/etc/pqact.conf
     - ./bin/setup.env:/awips2/edex/bin/setup.env
     - ./bin/runedex.sh:/awips2/edex/bin/runedex.sh
+    - ./modes.xml:/awips2/edex/conf/modes/modes.xml
   ports:
     - "388:388"
-    - "5672:5672"
-    - "5432:5432"
-    - "9581:9581"
-    - "9582:9582"
   ulimits:
     nofile:
       soft: 1024
