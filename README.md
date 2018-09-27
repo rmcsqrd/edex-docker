@@ -69,7 +69,6 @@ The file `docker-compose.yml` defines files to mount to the container and which 
         - ./etc/ldmd.conf:/awips2/ldm/etc/ldmd.conf
         - ./etc/pqact.conf:/awips2/ldm/etc/pqact.conf
         - ./bin/setup.env:/awips2/edex/bin/setup.env
-        - ./modes.xml:/awips2/edex/conf/modes/modes.xml
         - ./bin/runedex.sh:/awips2/edex/bin/runedex.sh
       ports:
         - "388:388"
@@ -97,10 +96,6 @@ The file `docker-compose.yml` defines files to mount to the container and which 
         export EXT_ADDR=js-157-198.jetstream-cloud.org
 
     **EXT_ADDR** must be set to an allowed EDEX Database/Request Server. In this example we are using a JetStream Cloud instance, which controls our edex-ingest access with IPtables, SSL certificates, and PostgreSQL pg_hba.conf rules (this server is used in software training workshop environments and will not allow outside connections). 
-
-- `modes.xml`
-
-    Defines mode names based on plugin groups and include/exclude rules. Edit this file to mute unused plugins from your EDEX instance.  For example, if you are only ingesting satellite imagery, you can turn off all other data plugins to quicken initialization time and reduce Qpid shared memory usage.
 
 - `bin/runedex.sh`
 
