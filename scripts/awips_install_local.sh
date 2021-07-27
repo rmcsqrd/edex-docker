@@ -5,6 +5,9 @@
 # maintainer: <tiffanym@ucar.edu>
 # use: ./awips_install.sh (--cave|--edex|--database|--ingest|--help)
 
+set -e
+set -x
+
 dir="$( cd "$(dirname "$0")" ; pwd -P )"
 
 usage="$(basename "$0") [-h] (--cave|--edex|--database|--ingest) #script to install Unidata AWIPS components.\n
