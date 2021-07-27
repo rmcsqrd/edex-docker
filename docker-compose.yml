@@ -1,14 +1,19 @@
-edex-ingest:
-  image: unidata/edex-ingest:latest
-  container_name: edex-ingest
-  volumes:
-    - ./etc/ldmd.conf:/awips2/ldm/etc/ldmd.conf
-    - ./etc/pqact.conf:/awips2/ldm/etc/pqact.conf
-    - ./bin/setup.env:/awips2/edex/bin/setup.env
-    - ./bin/runedex.sh:/awips2/edex/bin/runedex.sh
-  ports:
-    - "388:388"
-  ulimits:
-    nofile:
-      soft: 1024
-      hard: 1024
+version: "2"
+services:
+  edex_server:
+    build: . 
+    privileged: true
+    container_name: edex_server
+    ports:
+      - 9581:9581
+      - 388:388
+    volumes:
+      - ./aux/ldmd.conf:/awips2/ldm/etc/ldmd.conf
+      - ./aux/setup.env:/awips2/edex/bin/setup.env
+      - ./aux/edexServiceList:/etc/rc.d/init.d/edexServiceList
+      - ./aux/registry.xml:/awips2/ldm/etc/registry.xml
+    ulimits:
+      nofile:
+        soft: 1024
+        hard: 1024
+
