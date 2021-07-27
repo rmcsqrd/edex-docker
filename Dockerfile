@@ -10,6 +10,8 @@ RUN yum install httpd -y
 RUN yum -y install sudo
 RUN yum -y install wget
 RUN yum -y install perl
+RUN yum -y install less
+RUN yum -y install rsync
 
 # do awips install
 
