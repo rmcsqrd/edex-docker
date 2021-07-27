@@ -41,7 +41,7 @@ function check_yumfile {
   echo "wget -O /etc/yum.repos.d/awips2.repo ${wget_url}"
   wget -O /etc/yum.repos.d/awips2.repo ${wget_url}
 
-  yum clean all --enablerepo=awips2repo --disablerepo="*" 1>> /dev/null 2>&1
+  yum clean all --disablerepo="*" --enablerepo=awips2repo 1>> /dev/null 2>&1
 }
 
 function check_limits {
@@ -80,16 +80,16 @@ function remove_cave {
   if [[ $(rpm -qa | grep awips2-cave) ]]; then
     echo "
     =================== FAILED ===========================
-    Something went wrong with the un-install of CAVE 
+    Something went wrong with the un-install of CAVE
     and packages are still installed. Once the CAVE
     group has been successfully uninstalled, you can try
     running this script again.
-     Try running a \"yum grouplist\" to see if the AWIPS 
-     CAVE group is still installed and then do a 
-     \"yum groupremove [GROUP NAME]\". 
-       ex. yum groupremove 'AWIPS EDEX Server' 
-     
-     You may also need to run \"yum groups mark 
+     Try running a \"yum grouplist\" to see if the AWIPS
+     CAVE group is still installed and then do a
+     \"yum groupremove [GROUP NAME]\".
+       ex. yum groupremove 'AWIPS EDEX Server'
+
+     You may also need to run \"yum groups mark
      remove [GROUP NAME]\"
        ex. yum groups mark remove 'AWIPS CAVE'"
      exit
@@ -177,16 +177,16 @@ function remove_edex {
   if [[ $(rpm -qa | grep awips2 | grep -v cave) ]]; then
     echo "
     =================== FAILED ===========================
-    Something went wrong with the un-install of EDEX 
+    Something went wrong with the un-install of EDEX
     and packages are still installed. Once the EDEX
     groups have been successfully uninstalled, you can try
     running this script again.
-     Try running a \"yum grouplist\" to see which AWIPS 
-     group is still installed and then do a 
-     \"yum groupremove [GROUP NAME]\". 
-       ex. yum groupremove 'AWIPS EDEX Server' 
-     
-     You may also need to run \"yum groups mark 
+     Try running a \"yum grouplist\" to see which AWIPS
+     group is still installed and then do a
+     \"yum groupremove [GROUP NAME]\".
+       ex. yum groupremove 'AWIPS EDEX Server'
+
+     You may also need to run \"yum groups mark
      remove [GROUP NAME]\"
        ex. yum groups mark remove 'AWIPS EDEX Server'"
      exit
@@ -258,4 +258,3 @@ esac
 
 PATH=$PATH:/awips2/edex/bin/
 exit
-
