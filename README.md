@@ -18,15 +18,15 @@ Clone this repository
 
 Run the container with docker-compose
 
-    docker-compose up -d edex-ingest
+    docker-compose up -d edex_ingest
 
 Confirm the container is running
 
-    docker ps -a 
+    docker ps -a
 
 Enter the container
 
-    docker exec -it edex-ingest bash    
+    docker exec -it edex_ingest bash    
 
 Stop the container
 
@@ -35,7 +35,7 @@ Stop the container
 Delete the container (keep the image)
 
     docker-compose rm -f
-    
+
 Run commands inside the container, such as
 
     docker exec edex-ingest edex
@@ -82,7 +82,7 @@ The file `docker-compose.yml` defines files to mount to the container and which 
 - `etc/ldmd.conf`
 
     Defines which data feeds to receive. By default there is only one active request line (`REQUEST IDS|DDPLUS ".*" idd.unidata.ucar.edu`) to not overwhelm small EDEX containers ingesting large volumes of radar and gridded data files.  Any updates to the file `etc/ldmd.conf` will be read the next time you restart the container.
- 
+
 - `etc/pqact.conf`
 
     Defines how products are processed and where they are written to on the filesystem. This is the full set of pattern actions used in Unidata AWIPS, and generally you do not need to edit this file. Instead control which data feeds are requested in `ldmd.conf` (above).
@@ -90,12 +90,12 @@ The file `docker-compose.yml` defines files to mount to the container and which 
 - `bin/setup.env`
 
     Defines the remote EDEX Database/Request server:
-    
+
         ### EDEX localization related variables ###
         export AW_SITE_IDENTIFIER=OAX
         export EXT_ADDR=js-157-198.jetstream-cloud.org
 
-    **EXT_ADDR** must be set to an allowed EDEX Database/Request Server. In this example we are using a JetStream Cloud instance, which controls our edex-ingest access with IPtables, SSL certificates, and PostgreSQL pg_hba.conf rules (this server is used in software training workshop environments and will not allow outside connections). 
+    **EXT_ADDR** must be set to an allowed EDEX Database/Request Server. In this example we are using a JetStream Cloud instance, which controls our edex-ingest access with IPtables, SSL certificates, and PostgreSQL pg_hba.conf rules (this server is used in software training workshop environments and will not allow outside connections).
 
 - `bin/runedex.sh`
 
@@ -105,7 +105,7 @@ The file `docker-compose.yml` defines files to mount to the container and which 
         /awips2/edex/bin/start.sh -noConsole ingest &
         ldmadmin mkqueue
         ldmadmin start
-        
+
 
 ## Upstream Data Feed for the LDM
 
