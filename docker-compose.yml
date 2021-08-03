@@ -6,6 +6,7 @@ services:
     container_name: edex_server
     ports:
       - 9581:9581
+      - 9582:9582
       - 388:388
     volumes:
       - ./aux/ldmd.conf:/awips2/ldm/etc/ldmd.conf
