@@ -1,4 +1,13 @@
-# AWIPS EDEX Ingest Docker Container
+# NEW STUFF
+```bash
+docker-compose build --no-cache
+docker-compose up -d edex_server
+docker ps
+docker exec -it edex_server bash
+```
+
+# OLD STUFF
+# AWIPS EDEX Server Docker Container
 
 This repository contains files necessary to build and run a [Unidata AWIPS EDEX Data Server](https://www.unidata.ucar.edu/software/awips2/) inside a Docker container.
 
