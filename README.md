@@ -1,12 +1,3 @@
-# NEW STUFF
-```bash
-docker-compose build --no-cache
-docker-compose up -d edex_server
-docker ps
-docker exec -it edex_server bash
-```
-
-# OLD STUFF
 # AWIPS EDEX Server Docker Container
 
 This repository contains files necessary to build and run a [Unidata AWIPS EDEX Data Server](https://www.unidata.ucar.edu/software/awips2/) inside a Docker container.
@@ -25,9 +16,9 @@ Clone this repository
     git clone https://github.com/Unidata/edex-docker.git
     cd edex-docker
 
-Run the container with docker-compose
+Run the container with docker-compose 
 
-    docker-compose up -d edex-ingest
+    docker-compose up -d edex_server
 
 Confirm the container is running
 
@@ -35,11 +26,11 @@ Confirm the container is running
 
 Enter the container
 
-    docker exec -it edex-ingest bash    
+    docker exec -it edex_server bash    
 
 Stop the container
 
-    docker-compose stop
+    docker-compose down
 
 Delete the container (keep the image)
 
@@ -52,70 +43,36 @@ Run commands inside the container, such as
 which should return something like
 
     [edex status]
-     qpid        :: running :: pid 22474
-     EDEXingest  :: running :: pid 21860 31513
-     EDEXgrib    :: not running
-     ldmadmin    :: running :: pid 22483
+         postgres    :: running :: pid 355
+         pypies      :: running :: pid 398
+         qpid        :: running :: pid 441
+         EDEXingest  :: running :: pid 853 1236
+         EDEXgrib    :: not running
+         EDEXrequest :: running :: pid 815 1249
+         ldmadmin    :: running :: pid 1169
 
-     edex (status|start|stop|setup|log|purge|qpid|users)
-
-To update to the latest version and restart:
-
-```bash
-docker pull unidata/edex-ingest:latest
-docker-compose stop
-docker-compose up -d edex-ingest
-```
-
-## Configuration and Customization
-
-The file `docker-compose.yml` defines files to mount to the container and which ports to open:
-
-    edex-ingest:
-      image: unidata/edex-ingest:latest
-      container_name: edex-ingest
-      volumes:
-        - ./etc/ldmd.conf:/awips2/ldm/etc/ldmd.conf
-        - ./etc/pqact.conf:/awips2/ldm/etc/pqact.conf
-        - ./bin/setup.env:/awips2/edex/bin/setup.env
-        - ./bin/runedex.sh:/awips2/edex/bin/runedex.sh
-      ports:
-        - "388:388"
-      ulimits:
-        nofile:
-          soft: 1024
-          hard: 1024
-
-## Mounted Files
-
-- `etc/ldmd.conf`
-
-    Defines which data feeds to receive. By default there is only one active request line (`REQUEST IDS|DDPLUS ".*" idd.unidata.ucar.edu`) to not overwhelm small EDEX containers ingesting large volumes of radar and gridded data files.  Any updates to the file `etc/ldmd.conf` will be read the next time you restart the container.
- 
-- `etc/pqact.conf`
-
-    Defines how products are processed and where they are written to on the filesystem. This is the full set of pattern actions used in Unidata AWIPS, and generally you do not need to edit this file. Instead control which data feeds are requested in `ldmd.conf` (above).
-
-- `bin/setup.env`
-
-    Defines the remote EDEX Database/Request server:
+If configuration files are modified in the `aux` folder, run
     
-        ### EDEX localization related variables ###
-        export AW_SITE_IDENTIFIER=OAX
-        export EXT_ADDR=js-157-198.jetstream-cloud.org
+    docker-compose build
 
-    **EXT_ADDR** must be set to an allowed EDEX Database/Request Server. In this example we are using a JetStream Cloud instance, which controls our edex-ingest access with IPtables, SSL certificates, and PostgreSQL pg_hba.conf rules (this server is used in software training workshop environments and will not allow outside connections). 
+to have the Docker container reflect the changes. [This Docker documentation](https://docs.docker.com/compose/reference/build/) has some information on rebuilding. If changes are made to the configuration files but are not reflected in the Docker container, sometimes it is useful to run
 
-- `bin/runedex.sh`
+    docker-compose build --no-cache
 
-    The default script run when the container is started, acts as a sort-of service manager for EDEX and the LDM (see `ENTRYPOINT ["/awips2/edex/bin/runedex.sh"]` in *Dockerfile.edex*), essentially:
+which will rebuild the container images completely. Beware this may take a long time. 
 
-        /awips2/qpid/bin/qpid-wrapper &
-        /awips2/edex/bin/start.sh -noConsole ingest &
-        ldmadmin mkqueue
-        ldmadmin start
-        
+Connect with the [CAVE](http://unidata.github.io/awips2/install/install-cave/) client by selecting `localhost` or `127.0.0.1` for the EDEX server in the CAVE Localization settings.
 
+## Docker Requirements
+
+In general, the Docker memory/CPU/hard disk requirements are contingent on the amount of data the EDEX server will be used to ingest/process. Using the default included `ldmd.conf` file, good results were achieved by giving Docker 4 CPU cores, 16GB RAM, and 200GB of hard disk space. 
+
+## Customizable Files
+
+- `aux/ldmd.conf`
+
+    Defines which data feeds to receive. By default the container is setup to only ingest two channels of GOES data so as to not overwhelm small EDEX containers ingesting large volumes of radar and gridded data files.
+ 
 ## Upstream Data Feed for the LDM
 
 The LDM operates on a push data model. You will have to find an institution who will agree to push you the data you are interested in. If you are part of the academic community please send a support email to `support-idd@unidata.ucar.edu` to discuss your LDM data requirements.

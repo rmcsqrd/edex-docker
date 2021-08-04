@@ -6,12 +6,8 @@ services:
     container_name: edex_server
     ports:
       - 9581:9581
+      - 9582:9582
       - 388:388
-    volumes:
-      - ./aux/ldmd.conf:/awips2/ldm/etc/ldmd.conf
-      - ./aux/setup.env:/awips2/edex/bin/setup.env
-      - ./aux/edexServiceList:/etc/rc.d/init.d/edexServiceList
-      - ./aux/registry.xml:/awips2/ldm/etc/registry.xml
     ulimits:
       nofile:
         soft: 1024

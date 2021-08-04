@@ -5,9 +5,6 @@
 # maintainer: <tiffanym@ucar.edu>
 # use: ./awips_install.sh (--cave|--edex|--database|--ingest|--help)
 
-set -e
-set -x
-
 dir="$( cd "$(dirname "$0")" ; pwd -P )"
 
 usage="$(basename "$0") [-h] (--cave|--edex|--database|--ingest) #script to install Unidata AWIPS components.\n
@@ -41,7 +38,7 @@ function check_yumfile {
   echo "wget -O /etc/yum.repos.d/awips2.repo ${wget_url}"
   wget -O /etc/yum.repos.d/awips2.repo ${wget_url}
 
-  yum clean all --disablerepo="*" --enablerepo=awips2repo 1>> /dev/null 2>&1
+  yum clean all --enablerepo=awips2repo --disablerepo="*"  1>> /dev/null 2>&1
 }
 
 function check_limits {
