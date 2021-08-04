@@ -63,6 +63,9 @@ which will rebuild the container images completely. Beware this may take a long 
 
 Connect with the [CAVE](http://unidata.github.io/awips2/install/install-cave/) client by selecting `localhost` or `127.0.0.1` for the EDEX server in the CAVE Localization settings.
 
+![Demonstration of selecting localhost as the CAVE EDEX server](aux/edex_server_localhost.png)
+
+
 ## Docker Requirements
 
 In general, the Docker memory/CPU/hard disk requirements are contingent on the amount of data the EDEX server will be used to ingest/process. Using the default included `ldmd.conf` file, good results were achieved by giving Docker 4 CPU cores, 16GB RAM, and 200GB of hard disk space. 
