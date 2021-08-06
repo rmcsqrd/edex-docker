@@ -1,15 +1,31 @@
-version: "2"
+version: "3"
 services:
   edex_server:
-    build: . 
+    build: edex_server/.
+    # required for macOS
     privileged: true
     container_name: edex_server
     ports:
+      # these ports used for CAVE/python-awips communication
       - 9581:9581
       - 9582:9582
+      # this port used to talk to LDM
       - 388:388
-    ulimits:
-      nofile:
-        soft: 1024
-        hard: 1024
+  edex_tf:
+    build: edex_tf/.
+    privileged: true
+    container_name: edex_tf
+    ports:
+      # gRPC port
+      - 8500:8500
+      # REST API port
+      - 8501:8501
+      # communication with EDEX
+      - 9696:9696
+    volumes:
+      - type: bind
+        source: ./edex_tf/serving/tensorflow_serving/servables/tensorflow/testdata/saved_model_half_plus_two_cpu
+        target: /models/half_plus_two
+
+
 
