@@ -1,7 +1,11 @@
 version: "3"
 services:
+
+  # Container for the EDEX server
   edex_server:
-    build: edex_server/.
+    build: 
+      context: .
+      dockerfile: ./edex_server/Dockerfile
     # required for macOS
     privileged: true
     container_name: edex_server
@@ -11,21 +15,34 @@ services:
       - 9582:9582
       # this port used to talk to LDM
       - 388:388
-  edex_tf:
-    build: edex_tf/.
+
+
+  # Container to bridge the EDEX server and TF server
+  #   handles data preprocessing
+  edex_process:
+    build: 
+      context: .
+      dockerfile: ./edex_process/Dockerfile
+    # required for macOS
     privileged: true
-    container_name: edex_tf
-    ports:
-      # gRPC port
-      - 8500:8500
-      # REST API port
-      - 8501:8501
-      # communication with EDEX
-      - 9696:9696
-    volumes:
-      - type: bind
-        source: ./edex_tf/serving/tensorflow_serving/servables/tensorflow/testdata/saved_model_half_plus_two_cpu
-        target: /models/half_plus_two
+    container_name: edex_process
+
+# sample for TF
+        #  edex_tf:
+        #    build: edex_tf/.
+        #    privileged: true
+        #    container_name: edex_tf
+        #    ports:
+        #      # gRPC port
+        #      - 8500:8500
+        #      # REST API port
+        #      - 8501:8501
+        #      # communication with EDEX
+        #      - 9696:9696
+        #    volumes:
+        #      - type: bind
+        #        source: ./edex_tf/serving/tensorflow_serving/servables/tensorflow/testdata/saved_model_half_plus_two_cpu
+        #        target: /models/half_plus_two
 
 
 
