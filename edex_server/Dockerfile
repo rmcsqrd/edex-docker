@@ -6,14 +6,17 @@ RUN yum install httpd -y
 ENV HOME /root
 ENV WORKDIR /root
 
-# install pre-reqs
+# install AWIPS pre-reqs
 RUN yum -y install sudo
 RUN yum -y install wget
 RUN yum -y install perl
 RUN yum -y install less
 RUN yum -y install rsync
-RUN yum -y install epel-release
-RUN yum -y install python-pip
+
+# install gRPC pre-reqs
+RUN yum -y install python3
+RUN yum -y install python3-pip
+RUN pip3 install --upgrade pip
 
 # install gRPC stuff
 COPY ./common/grpcio_init.sh /tmp/grpcio_init.sh

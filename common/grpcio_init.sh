@@ -3,9 +3,9 @@
 # bash script to install gRPC stuff
 
 # install gRPC stuff
-python -m pip install --upgrade pip
-python -m pip install grpcio
-python -m pip install grpcio-tools
+pip3 install --upgrade pip
+pip3 install grpcio
+pip3 install grpcio-tools
 
 # get proto files and generate code
 PROTO_LOC="https://raw.githubusercontent.com/Unidata/netcdf-java/develop/gcdm/src/main/proto/ucar/gcdm/"
@@ -22,5 +22,5 @@ done
 
 # generate proto code
 for proto_type in "${PROTOS[@]}"; do
-    python -m grpc_tools.protoc -I/grpc/ --python_out=/grpc --grpc_python_out=/grpc /grpc/ucar/gcdm/${proto_type}.proto
+    python3 -m grpc_tools.protoc -I/grpc/ --python_out=/grpc --grpc_python_out=/grpc /grpc/ucar/gcdm/${proto_type}.proto
 done

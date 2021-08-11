@@ -1,12 +1,19 @@
+# NOTES:
+# general
+# - the build context is in the docker-compose directory so that
+#   all containers can use the same grpcio_init script
+# edex_server
+# - privileged mode is required on macOS for networking
+# - the edex server talks on ports 9581, 9582 to CAVE/python-awips
+# - the edex server talks on ports 388 to the upstream LDM
+#
+# edex_process
 version: "3"
 services:
-
-  # Container for the EDEX server
   edex_server:
     build: 
       context: .
       dockerfile: ./edex_server/Dockerfile
-    # required for macOS
     privileged: true
     container_name: edex_server
     ports:
