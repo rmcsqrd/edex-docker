@@ -17,20 +17,13 @@ services:
     privileged: true
     container_name: edex_server
     ports:
-      # these ports used for CAVE/python-awips communication
       - 9581:9581
       - 9582:9582
-      # this port used to talk to LDM
       - 388:388
-
-
-  # Container to bridge the EDEX server and TF server
-  #   handles data preprocessing
   edex_process:
     build: 
       context: .
       dockerfile: ./edex_process/Dockerfile
-    # required for macOS
     privileged: true
     container_name: edex_process
 
